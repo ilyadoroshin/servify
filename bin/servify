@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+port = ARGV.first || 3000
+system "lsof -t -i tcp:#{ port } | xargs kill > /dev/null"
+system "bundle exec rails s -p #{ port }"
