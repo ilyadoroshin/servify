@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   # end
 
   spec.files         = `git ls-files -z`.split("\x0")
-  spec.executables   = ['servify']
+  spec.executables   << 'servify'
   spec.require_paths = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.10"
