@@ -10,7 +10,23 @@ Gem::Specification.new do |spec|
   spec.email         = ["idoroshin@aligntech.com"]
 
   spec.summary       = %q{Kills existing server on given port}
-  spec.description   = %q{Helps don't think about starting your rails server, if there's any server already rinning, it'll kill it}
+  spec.description   = <<DOC
+  Running servify will stop any process on 3000 (rails server default), and run rails server after that. 
+  You can specify different port like this:
+  $ servify 8080
+
+  Useful when used with tmuxinator gem (or any other), e.g.:
+
+  windows:
+    - editor:
+      layout: main-vertical
+      panes:
+        - vim
+        - servify
+        - guard
+
+DOC
+
   spec.homepage      = "https://github.com/ilyadoroshin/servify"
   spec.license       = "MIT"
 
