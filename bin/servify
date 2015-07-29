@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
 port = ARGV.first || 3000
-system "lsof -t -i tcp:#{ port } | xargs kill > /dev/null"
-system "bundle exec rails s -p #{ port }"
+rails_servers   = `ps aux | grep 'rails s' | awk '{ print $2 }'`.split
+process_on_port = `lsof -P -i tcp:#{ port } | grep ruby | awk '{ print $2 }'`.split
+system "echo #{ (rails_servers & process_on_port).join('') } | xargs kill > /dev/null"
+
