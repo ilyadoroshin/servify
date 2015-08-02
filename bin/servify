@@ -17,9 +17,6 @@ rails_servers   = `ps aux | grep 'rails s' | awk '{ print $2 }'`.split
 process_on_port = `lsof -P -i tcp:#{ port } | grep ruby | awk '{ print $2 }'`.split
 already_running = `cat ./tmp/pids/server.pid`.split
 
-puts rails_servers.to_s.red
-puts process_on_port.to_s.red
-
 processes = (rails_servers & process_on_port)
 
 unless already_running.empty? 
