@@ -1,6 +1,38 @@
 #!/usr/bin/env ruby
-port = ARGV.first || 3000
+require 'colorize'
+
+(puts "Not RoR folder. Exiting...".red; exit 0) unless File.exist?('./bin/rails')
+
+port = unless (ARGV.first || '').empty? 
+  if ARGV.first =~ /\A\d+\Z/
+    ARGV.first
+  else
+    puts "Port must be numerical! Exiting...".red
+    exit 0
+  end
+end
+
+port ||= 3000
 rails_servers   = `ps aux | grep 'rails s' | awk '{ print $2 }'`.split
 process_on_port = `lsof -P -i tcp:#{ port } | grep ruby | awk '{ print $2 }'`.split
-system "echo #{ (rails_servers & process_on_port).join('') } | xargs kill > /dev/null"
+already_running = `cat ./tmp/pids/server.pid`.split
+
+puts rails_servers.to_s.red
+puts process_on_port.to_s.red
+
+processes = (rails_servers & process_on_port)
+
+unless already_running.empty? 
+  puts 'Found already running server, Do you want to kill this process as well? [Yn]'
+  answer = (gets.chomp).empty? ? 'Y' : _
+
+  processes.concat(already_running) if %w(t true yes y).include? answer.downcase
+end
+
+unless processes.empty?
+  puts "Found processes: #{ processes } ".yellow
+  system "echo #{ processes.join("\n") } | xargs kill > /dev/null"
+enm
+
+system "bundle exec rails server -p #{ port }"
 
