@@ -21,15 +21,16 @@ processes = (rails_servers & process_on_port)
 
 unless already_running.empty? 
   puts 'Found already running server, Do you want to kill this process as well? [Yn]'.yellow
-  answer = (input = gets.chomp).empty? ? 'Y' : input
+  input  = gets.chomp
+  answer = input.empty? ? 'Y' : input
 
   processes.concat(already_running) if %w(t true yes y).include? answer.downcase
 end
 
 unless processes.empty?
-  print 'Clearing the way....'
-  system "echo #{ processes.join("\n") } | xargs kill > /dev/null"
-  puts '✓'
+  print 'Clearing the way....'.yellow
+  system "echo #{ processes.join(" ") } | xargs kill > /dev/null"
+  puts '✓'.green
 end
 
 system "bundle exec rails server -p #{ port }"
